@@ -13,12 +13,12 @@ class sfFacebook
      *
      * @return sfGuardUser
      */
-    public static function getSfGuardUserByFacebookSession($create = true, $isActive = true)
+    public static function getSfGuardUserByFacebookSession($create = true, $isActive = true, $model = 'UserGameData')
     {
         $user = null;
         $uid = CI_Facebook_Core::getApiClient()->getUser();
         $q = Doctrine_Query::create()
-            ->from('UserGameData u')
+            ->from(sprintf(' %s u', $model))
             ->where('u.facebook_uid = ?', $uid);
 
         if ($q->count())
@@ -29,10 +29,10 @@ class sfFacebook
         return $user;
     }
 
-    public static function getOrCreateUserByFacebookUid($facebook_uid, $isActive = true)
+    public static function getOrCreateUserByFacebookUid($facebook_uid, $isActive = true, $model = 'UserGameData')
     {
         $q = Doctrine_Query::create()
-            ->from('UserGameData u')
+            ->from(sprintf(' %s u', $model))
             ->where('u.facebook_uid = ?', $facebook_uid);
 
         if ($q->count())
